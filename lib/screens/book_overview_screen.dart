@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/book_provider.dart';
+import '../widgets/book.dart';
 
 class BookOverviewScreen extends StatelessWidget {
   _getBooks(BuildContext context) async {
     try {
       final response =
           await Provider.of<BookProvider>(context, listen: false).getBooks();
-      print(response);
+      return response;
     } catch (error) {
       print(error);
+      return [];
     }
-    return true;
   }
 
   @override
@@ -25,7 +26,22 @@ class BookOverviewScreen extends StatelessWidget {
         future: _getBooks(context),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            return Text('Books');
+            List books = snapshot.data;
+            if (books.length == 0)
+              return Center(
+                child: Text('No posts found!'),
+              );
+            return GridView.builder(
+              padding: const EdgeInsets.all(10),
+              itemCount: books.length,
+              itemBuilder: (ctx, index) => Book(books[index]),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 3 / 4,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+            );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {

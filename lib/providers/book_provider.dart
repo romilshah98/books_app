@@ -10,8 +10,20 @@ class BookProvider extends ChangeNotifier {
     try {
       final response = await http.get(
           "https://book-shop-8a737.firebaseio.com/books.json?auth=$authToken");
-      final jsonResponse = convert.jsonDecode(response.body);
-      return jsonResponse;
+      final jsonResponse =
+          convert.jsonDecode(response.body) as Map<String, dynamic>;
+      final List book = [];
+      jsonResponse.forEach((bookId, bookData) {
+        book.add({
+          'id': bookId,
+          'image': bookData['image'],
+          'isbn': bookData['isbn13'],
+          'price': bookData['price'],
+          'title': bookData['title'],
+          'url': bookData['url']
+        });
+      });
+      return book;
     } catch (error) {
       throw (error);
     }
