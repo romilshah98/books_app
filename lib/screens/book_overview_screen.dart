@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/book_provider.dart';
+import '../providers/cart_provider.dart';
 import '../widgets/book.dart';
+import '../widgets/badge.dart';
+import './cart_screen.dart';
+import '../widgets/app_drawer.dart';
 
 class BookOverviewScreen extends StatelessWidget {
+  static const routeName = '/books';
   _getBooks(BuildContext context) async {
     try {
       final response =
@@ -21,7 +26,22 @@ class BookOverviewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Books'),
+        actions: <Widget>[
+          Consumer<CartProvider>(
+            builder: (_, cartData, ch) => Badge(
+              child: ch,
+              value: cartData.itemCount.toString(),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
+            ),
+          )
+        ],
       ),
+      drawer: AppDrawer(),
       body: FutureBuilder(
         future: _getBooks(context),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -29,7 +49,7 @@ class BookOverviewScreen extends StatelessWidget {
             List books = snapshot.data;
             if (books.length == 0)
               return Center(
-                child: Text('No posts found!'),
+                child: Text('No book found!'),
               );
             return GridView.builder(
               padding: const EdgeInsets.all(10),
