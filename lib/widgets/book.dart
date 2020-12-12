@@ -11,7 +11,7 @@ class Book extends StatelessWidget {
   Book(this.book);
   @override
   Widget build(BuildContext context) {
-    final cart=Provider.of<CartProvider>(context,listen: false);
+    final cart = Provider.of<CartProvider>(context, listen: false);
     return GestureDetector(
       child: GridTile(
         child: Image.network(
@@ -24,14 +24,15 @@ class Book extends StatelessWidget {
             book['title'],
             textAlign: TextAlign.center,
           ),
-        ),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.shopping_cart,
+          trailing: IconButton(
+            icon: Icon(
+              Icons.shopping_cart,
+            ),
+            onPressed: () {
+              cart.addItem(
+                  this.book['id'], this.book['price'], this.book['title']);
+            },
           ),
-          onPressed: (){
-            cart.addItem(this.book['id'],this.book['price'],this.book['title']);
-          },
         ),
       ),
       onTap: () => Navigator.push(context,
