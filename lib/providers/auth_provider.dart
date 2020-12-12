@@ -60,8 +60,6 @@ class AuthProvider extends ChangeNotifier {
 
   Future authenticateUser(String email, String password) async {
     try {
-      print(email);
-      print(password);
       const url =
           "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDiq4pZqSUhf3KwmTaiVxeaHNZpQ_kln_o";
       final response = await http.post(url,
@@ -76,7 +74,6 @@ class AuthProvider extends ChangeNotifier {
       //   _password = password;
       //   // notifyListeners();
       // }
-      print(jsonResponse);
       if (jsonResponse['error'] == null) {
         _token = jsonResponse['idToken'];
         _userId = jsonResponse['localId'];
