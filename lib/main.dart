@@ -41,7 +41,15 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primaryColor: Colors.blue,
             ),
-            home: auth.isAuth ? BookOverviewScreen() : AuthScreen(),
+            home: auth.isAuth
+                ? BookOverviewScreen()
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (ctx, snapShot) =>
+                        snapShot.connectionState == ConnectionState.waiting
+                            ? Container(child: CircularProgressIndicator())
+                            : AuthScreen(),
+                  ),
             routes: {
               CartScreen.routeName: (ctx) => CartScreen(),
               OrdersScreen.routeName: (ctx) => OrdersScreen(),
