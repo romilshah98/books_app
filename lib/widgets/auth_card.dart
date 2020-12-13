@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers/auth_provider.dart';
-// import '../screens/hashtag_list.dart';
 
 enum Mode { Signup, Login }
 
@@ -76,8 +75,6 @@ class _AuthCardState extends State<AuthCard> {
         _signupData['password'],
       );
       if (response['error'] == null) {
-        //   _storeUserDetails(_signupData['email'], _signupData['password']);
-        print('correct');
         return;
       } else {
         showDialog(
@@ -122,8 +119,6 @@ class _AuthCardState extends State<AuthCard> {
         _loginData['password'],
       );
       if (response['error'] == null) {
-        print('correct');
-        // Navigator.of(context).pushReplacementNamed(HashTagList.routeName);
         return;
       } else {
         showDialog(
@@ -160,177 +155,129 @@ class _AuthCardState extends State<AuthCard> {
     }
   }
 
-  void _storeUserDetails(String email, String password) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('Email', email);
-    prefs.setString('Password', password);
-  }
-
-  Future _isAlreadyLoggedIn() async {
-    return true;
-  } //   bool isOnline = await DataConnectionChecker().hasConnection;
-  //   if (!isOnline) {
-  //     Navigator.of(context).pushReplacementNamed(HashTagList.routeName);
-  //     return;
-  //   }
-  //   SharedPreferences _prefs = await SharedPreferences.getInstance();
-  //   String _email = _prefs.getString('Email') ?? "";
-  //   String _password = _prefs.getString('Password') ?? "";
-  //   try {
-  //     final response = await Provider.of<AuthProvider>(context, listen: false)
-  //         .authenticateUser(
-  //       _email,
-  //       _password,
-  //     );
-  //     if (response['result']) {
-  //       Navigator.of(context).pushReplacementNamed(HashTagList.routeName);
-  //       return;
-  //     }
-  //   } catch (error) {
-  //     return false;
-  //   }
-  //   return false;
-  // }
-
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    return FutureBuilder(
-      future: _isAlreadyLoggedIn(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          return Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            elevation: 5,
-            child: Container(
-              height: _mode == Mode.Signup ? 300 : 250,
-              constraints: BoxConstraints(
-                minHeight: _mode == Mode.Signup ? 310 : 260,
-              ),
-              width: deviceSize.width * 0.75,
-              padding: const EdgeInsets.all(15),
-              child: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'E-Mail',
-                          icon: Padding(
-                            padding: EdgeInsets.only(top: 15),
-                            child: Icon(
-                              Icons.email,
-                            ),
-                          ),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          value = value.trim();
-                          if (value.isEmpty ||
-                              !value.contains('@') ||
-                              !value.contains('.')) {
-                            return 'Invalid email!';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          _mode == Mode.Login
-                              ? _loginData['email'] = value
-                              : _signupData['email'] = value;
-                        },
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      elevation: 5,
+      child: Container(
+        height: _mode == Mode.Signup ? 300 : 250,
+        constraints: BoxConstraints(
+          minHeight: _mode == Mode.Signup ? 310 : 260,
+        ),
+        width: deviceSize.width * 0.75,
+        padding: const EdgeInsets.all(15),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'E-Mail',
+                    icon: Padding(
+                      padding: EdgeInsets.only(top: 15),
+                      child: Icon(
+                        Icons.email,
                       ),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          icon: Padding(
-                            padding: EdgeInsets.only(top: 15.0),
-                            child: Icon(
-                              Icons.lock,
-                            ),
-                          ),
-                        ),
-                        obscureText: true,
-                        controller: _passwordController,
-                        validator: (value) {
-                          value = value.trim();
-                          if (value.isEmpty || value.length < 6) {
-                            return 'Password is too short!';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          _mode == Mode.Login
-                              ? _loginData['password'] = value
-                              : _signupData['password'] = value;
-                        },
-                      ),
-                      if (_mode == Mode.Signup)
-                        TextFormField(
-                          enabled: _mode == Mode.Signup,
-                          decoration: const InputDecoration(
-                            labelText: 'Confirm Password',
-                            icon: Padding(
-                              padding: EdgeInsets.only(top: 15.0),
-                              child: Icon(
-                                Icons.lock,
-                              ),
-                            ),
-                          ),
-                          obscureText: true,
-                          validator: _mode == Mode.Signup
-                              ? (value) {
-                                  if (value != _passwordController.text) {
-                                    return 'Passwords do not match!';
-                                  }
-                                  return null;
-                                }
-                              : null,
-                        ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      if (_isLoading)
-                        const CircularProgressIndicator()
-                      else
-                        RaisedButton(
-                          child:
-                              Text(_mode == Mode.Login ? 'LOGIN' : 'SIGN UP'),
-                          onPressed: _submit,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 8),
-                          color: Theme.of(context).primaryColor,
-                          textColor:
-                              Theme.of(context).primaryTextTheme.button.color,
-                        ),
-                      FlatButton(
-                        child: Text(
-                            ' ${_mode == Mode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
-                        onPressed: _switchMode,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 4),
-                        textColor: Theme.of(context).primaryColor,
-                      ),
-                    ],
+                    ),
                   ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    value = value.trim();
+                    if (value.isEmpty ||
+                        !value.contains('@') ||
+                        !value.contains('.')) {
+                      return 'Invalid email!';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _mode == Mode.Login
+                        ? _loginData['email'] = value
+                        : _signupData['email'] = value;
+                  },
                 ),
-              ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    icon: Padding(
+                      padding: EdgeInsets.only(top: 15.0),
+                      child: Icon(
+                        Icons.lock,
+                      ),
+                    ),
+                  ),
+                  obscureText: true,
+                  controller: _passwordController,
+                  validator: (value) {
+                    value = value.trim();
+                    if (value.isEmpty || value.length < 6) {
+                      return 'Password is too short!';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _mode == Mode.Login
+                        ? _loginData['password'] = value
+                        : _signupData['password'] = value;
+                  },
+                ),
+                if (_mode == Mode.Signup)
+                  TextFormField(
+                    enabled: _mode == Mode.Signup,
+                    decoration: const InputDecoration(
+                      labelText: 'Confirm Password',
+                      icon: Padding(
+                        padding: EdgeInsets.only(top: 15.0),
+                        child: Icon(
+                          Icons.lock,
+                        ),
+                      ),
+                    ),
+                    obscureText: true,
+                    validator: _mode == Mode.Signup
+                        ? (value) {
+                            if (value != _passwordController.text) {
+                              return 'Passwords do not match!';
+                            }
+                            return null;
+                          }
+                        : null,
+                  ),
+                const SizedBox(
+                  height: 20,
+                ),
+                if (_isLoading)
+                  const CircularProgressIndicator()
+                else
+                  RaisedButton(
+                    child: Text(_mode == Mode.Login ? 'LOGIN' : 'SIGN UP'),
+                    onPressed: _submit,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+                    color: Theme.of(context).primaryColor,
+                    textColor: Theme.of(context).primaryTextTheme.button.color,
+                  ),
+                FlatButton(
+                  child: Text(
+                      ' ${_mode == Mode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
+                  onPressed: _switchMode,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 4),
+                  textColor: Theme.of(context).primaryColor,
+                ),
+              ],
             ),
-          );
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          return const Center(
-              child: CircularProgressIndicator(
-            backgroundColor: Colors.white,
-          ));
-        }
-      },
+          ),
+        ),
+      ),
     );
   }
 }
