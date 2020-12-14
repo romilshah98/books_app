@@ -27,6 +27,7 @@ class BookOverviewScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Books'),
         actions: <Widget>[
+          IconButton(icon: Icon(Icons.search), onPressed: () {}),
           Consumer<CartProvider>(
             builder: (_, cartData, ch) => Badge(
               child: ch,
@@ -38,7 +39,7 @@ class BookOverviewScreen extends StatelessWidget {
                 Navigator.of(context).pushNamed(CartScreen.routeName);
               },
             ),
-          )
+          ),
         ],
       ),
       drawer: AppDrawer(),

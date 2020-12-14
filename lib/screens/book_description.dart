@@ -20,7 +20,7 @@ class BookDescriptionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('title'),
+        title: Text(book['title']),
       ),
       body: FutureBuilder(
         future: _getBookDetails(context),
@@ -36,42 +36,63 @@ class BookDescriptionScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [Image.network(snapshot.data['image'])],
                   ),
-                  Divider(),
-                  Table(
-                    border: TableBorder.all(
-                        color: Colors.black,
-                        style: BorderStyle.solid,
-                        width: 0.3),
+                  Divider(
+                    height: 1,
+                  ),
+                  Expanded(
+                      child: ListView(
                     children: [
-                      TableRow(children: [
-                        Column(children: [
-                          Text('Title', style: TextStyle(fontSize: 18.0))
-                        ]),
-                        Column(children: [
-                          Text(snapshot.data['title'],
-                              style: TextStyle(fontSize: 18.0))
-                        ]),
-                      ]),
-                      TableRow(children: [
-                        Column(children: [
-                          Text('ISBN', style: TextStyle(fontSize: 18.0))
-                        ]),
-                        Column(children: [
-                          Text(book['isbn'],
-                              style: TextStyle(fontSize: 18.0))
-                        ]),
-                      ]),
-                      TableRow(children: [
-                        Column(children: [
-                          Text('Price', style: TextStyle(fontSize: 18.0))
-                        ]),
-                        Column(children: [
-                          Text(book['price'],
-                              style: TextStyle(fontSize: 18.0))
-                        ]),
-                      ]),
+                      SingleChildScrollView(
+                          child: DataTable(
+                        headingRowHeight: 0,
+                        columns: [
+                          DataColumn(label: Text('')),
+                          DataColumn(label: Text('')),
+                        ],
+                        rows: [
+                          DataRow(cells: [
+                            DataCell(Text(
+                              'Title',
+                              style: TextStyle(fontSize: 13),
+                            )),
+                            DataCell(Text(snapshot.data['title'])),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(Text('Description')),
+                            DataCell(Text(
+                              snapshot.data['desc'],
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(Text('Authors')),
+                            DataCell(Text(snapshot.data['authors'])),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(Text('ISBN')),
+                            DataCell(Text(book['isbn'])),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(Text('Price')),
+                            DataCell(Text(book['price'])),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(Text('Pages')),
+                            DataCell(Text(snapshot.data['pages'])),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(Text('Publisher')),
+                            DataCell(Text(snapshot.data['publisher'])),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(Text('Year')),
+                            DataCell(Text(snapshot.data['year'])),
+                          ]),
+                        ],
+                      ))
                     ],
-                  )
+                  ))
                 ],
               ),
             );
