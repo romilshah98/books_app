@@ -1,5 +1,4 @@
 import 'dart:convert' as convert;
-
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -50,4 +49,15 @@ class BookProvider extends ChangeNotifier {
   //   final jsonResponse = convert.jsonDecode(response.body);
   //   print(jsonResponse);
   // }
+
+  Future<void> getBookDetails(var isbn) async {
+    final url = "https://api.itbook.store/1.0/books/$isbn";
+    try {
+      final response = await http.get(url);
+      final responseData = convert.jsonDecode(response.body);
+      return responseData;
+    } catch (error) {
+      print(error);
+    }
+  }
 }
