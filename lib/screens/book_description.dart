@@ -2,13 +2,21 @@ import 'package:books_app/providers/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class BookDescriptionScreen extends StatelessWidget {
+class BookDescriptionScreen extends StatefulWidget {
   final book;
   BookDescriptionScreen(this.book);
+
+  @override
+  _BookDescriptionScreenState createState() => _BookDescriptionScreenState();
+}
+
+class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
+  int quantity = 0;
+
   Future<void> _getBookDetails(BuildContext context) async {
     try {
       var details = await Provider.of<BookProvider>(context, listen: false)
-          .getBookDetails(book['isbn']);
+          .getBookDetails(widget.book['isbn']);
       print(details);
       return details;
     } catch (error) {
@@ -20,7 +28,7 @@ class BookDescriptionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(book['title']),
+        title: Text(widget.book['title']),
       ),
       body: FutureBuilder(
         future: _getBookDetails(context),
@@ -43,52 +51,101 @@ class BookDescriptionScreen extends StatelessWidget {
                       child: ListView(
                     children: [
                       SingleChildScrollView(
-                          child: DataTable(
-                        headingRowHeight: 0,
-                        columns: [
-                          DataColumn(label: Text('')),
-                          DataColumn(label: Text('')),
-                        ],
-                        rows: [
-                          DataRow(cells: [
-                            DataCell(Text(
-                              'Title',
-                              style: TextStyle(fontSize: 13),
-                            )),
-                            DataCell(Text(snapshot.data['title'])),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text('Description')),
-                            DataCell(Text(
-                              snapshot.data['desc'],
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            )),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text('Authors')),
-                            DataCell(Text(snapshot.data['authors'])),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text('ISBN')),
-                            DataCell(Text(book['isbn'])),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text('Price')),
-                            DataCell(Text(book['price'])),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text('Pages')),
-                            DataCell(Text(snapshot.data['pages'])),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text('Publisher')),
-                            DataCell(Text(snapshot.data['publisher'])),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text('Year')),
-                            DataCell(Text(snapshot.data['year'])),
-                          ]),
+                          child: Column(
+                        children: [
+                          DataTable(
+                            headingRowHeight: 0,
+                            columns: [
+                              DataColumn(label: Text('')),
+                              DataColumn(label: Text('')),
+                            ],
+                            rows: [
+                              DataRow(cells: [
+                                DataCell(Text(
+                                  'Title',
+                                  style: TextStyle(fontSize: 13),
+                                )),
+                                DataCell(Text(snapshot.data['title'])),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('Description')),
+                                DataCell(Text(
+                                  snapshot.data['desc'],
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                )),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('Authors')),
+                                DataCell(Text(snapshot.data['authors'])),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('ISBN')),
+                                DataCell(Text(widget.book['isbn'])),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('Price')),
+                                DataCell(Text(widget.book['price'])),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('Pages')),
+                                DataCell(Text(snapshot.data['pages'])),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('Publisher')),
+                                DataCell(Text(snapshot.data['publisher'])),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('Year')),
+                                DataCell(Text(snapshot.data['year'])),
+                              ]),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                GestureDetector(
+                                  child: CircleAvatar(
+                                    maxRadius: 12,
+                                    child: Text('-'),
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      if (quantity > 0) {
+                                        quantity = quantity - 1;
+                                      }
+                                    });
+                                  },
+                                ),
+                                Card(
+                                  child: Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Text(
+                                        'Add to Cart',
+                                        style: TextStyle(color: Colors.white),
+                                      )),
+                                  color: Colors.blue,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      quantity = quantity + 1;
+                                    });
+                                  },
+                                  child: CircleAvatar(
+                                    maxRadius: 12,
+                                    child: Text('+'),
+                                  ),
+                                ),
+                                CircleAvatar(
+                                  maxRadius: 12,
+                                  child: Text(this.quantity.toString()),
+                                )
+                              ],
+                            ),
+                          )
                         ],
                       ))
                     ],
