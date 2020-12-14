@@ -50,7 +50,7 @@ class BookProvider extends ChangeNotifier {
   //   print(jsonResponse);
   // }
 
-  Future<void> getBookDetails(var isbn) async {
+  Future<dynamic> getBookDetails(var isbn) async {
     final url = "https://api.itbook.store/1.0/books/$isbn";
     try {
       final response = await http.get(url);
