@@ -34,8 +34,8 @@ class CartProvider with ChangeNotifier {
   }
 
   void addItem(String bookId, String price, String title) {
-    price=price.substring(1);
-    
+    price = price.substring(1);
+
     if (_items.containsKey(bookId)) {
       _items.update(
         bookId,
@@ -60,21 +60,35 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeItem(String bookId){
+  void reduceItemCount(String bookId, String price, String title) {
+    price = price.substring(1);
+    _items.update(
+      bookId,
+      (existingItem) => CartItem(
+        id: existingItem.id,
+        title: existingItem.title,
+        price: existingItem.price,
+        quantity: existingItem.quantity - 1,
+      ),
+    );
+    notifyListeners();
+  }
+
+  void removeItem(String bookId) {
     _items.remove(bookId);
     notifyListeners();
   }
 
-  int getItemCount(String id){
-    if(_items.containsKey(id)){
+  int getItemCount(String id) {
+    if (_items.containsKey(id)) {
       return _items[id].quantity;
-    } else{
+    } else {
       return 0;
     }
   }
 
-  void clear(){
-    _items={};
+  void clear() {
+    _items = {};
     notifyListeners();
   }
 }

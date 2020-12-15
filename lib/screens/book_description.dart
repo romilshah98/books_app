@@ -134,13 +134,10 @@ class BookDescriptionScreen extends StatelessWidget {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    // setState(() {
-                                    //   quantity = quantity + 1;
                                     Provider.of<CartProvider>(context,
                                             listen: false)
                                         .addItem(book['id'], book['price'],
                                             book['title']);
-                                    // });
                                   },
                                   child: CircleAvatar(
                                     maxRadius: 16,
@@ -150,6 +147,27 @@ class BookDescriptionScreen extends StatelessWidget {
                                 CircleAvatar(
                                   maxRadius: 16,
                                   child: Text(quantity.toString()),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (quantity == 0) {
+                                      return;
+                                    }
+                                    if (quantity > 1) {
+                                      Provider.of<CartProvider>(context,
+                                              listen: false)
+                                          .reduceItemCount(book['id'],
+                                              book['price'], book['title']);
+                                    } else {
+                                      Provider.of<CartProvider>(context,
+                                              listen: false)
+                                          .removeItem(book['id']);
+                                    }
+                                  },
+                                  child: CircleAvatar(
+                                    maxRadius: 16,
+                                    child: Text('-'),
+                                  ),
                                 ),
                               ],
                             ),
