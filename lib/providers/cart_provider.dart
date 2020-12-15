@@ -65,6 +65,14 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  int getItemCount(String id){
+    if(_items.containsKey(id)){
+      return _items[id].quantity;
+    } else{
+      return 0;
+    }
+  }
+
   void clear(){
     _items={};
     notifyListeners();

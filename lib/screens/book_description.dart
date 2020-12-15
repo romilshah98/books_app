@@ -5,23 +5,16 @@ import 'package:provider/provider.dart';
 
 import '../widgets/badge.dart';
 import './cart_screen.dart';
+import '../providers/cart_provider.dart';
 
-class BookDescriptionScreen extends StatefulWidget {
+class BookDescriptionScreen extends StatelessWidget {
   final book;
   BookDescriptionScreen(this.book);
-
-  @override
-  _BookDescriptionScreenState createState() => _BookDescriptionScreenState();
-}
-
-class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
-  int quantity = 0;
 
   Future<void> _getBookDetails(BuildContext context) async {
     try {
       var details = await Provider.of<BookProvider>(context, listen: false)
-          .getBookDetails(widget.book['isbn']);
-      print(details);
+          .getBookDetails(book['isbn']);
       return details;
     } catch (error) {
       print(error);
@@ -30,9 +23,12 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final quantity =
+        Provider.of<CartProvider>(context).getItemCount(book['id']);
+    print(quantity);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.book['title']),
+        title: Text(book['title']),
         actions: <Widget>[
           Consumer<CartProvider>(
             builder: (_, cartData, ch) => Padding(
@@ -57,8 +53,6 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
         future: _getBookDetails(context),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            print('in future');
-            print(snapshot.data);
             return Container(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: Column(
@@ -104,11 +98,11 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
                               ]),
                               DataRow(cells: [
                                 DataCell(Text('ISBN')),
-                                DataCell(Text(widget.book['isbn'])),
+                                DataCell(Text(book['isbn'])),
                               ]),
                               DataRow(cells: [
                                 DataCell(Text('Price')),
-                                DataCell(Text(widget.book['price'])),
+                                DataCell(Text(book['price'])),
                               ]),
                               DataRow(cells: [
                                 DataCell(Text('Pages')),
@@ -140,15 +134,13 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    setState(() {
-                                      quantity = quantity + 1;
-                                      Provider.of<CartProvider>(context,
-                                              listen: false)
-                                          .addItem(
-                                              widget.book['id'],
-                                              widget.book['price'],
-                                              widget.book['title']);
-                                    });
+                                    // setState(() {
+                                    //   quantity = quantity + 1;
+                                    Provider.of<CartProvider>(context,
+                                            listen: false)
+                                        .addItem(book['id'], book['price'],
+                                            book['title']);
+                                    // });
                                   },
                                   child: CircleAvatar(
                                     maxRadius: 16,
@@ -157,8 +149,8 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
                                 ),
                                 CircleAvatar(
                                   maxRadius: 16,
-                                  child: Text(this.quantity.toString()),
-                                )
+                                  child: Text(quantity.toString()),
+                                ),
                               ],
                             ),
                           )
