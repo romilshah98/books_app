@@ -1,5 +1,7 @@
+import 'package:books_app/screens/filter_books.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:async/async.dart';
 
 import '../providers/book_provider.dart';
 import '../providers/cart_provider.dart';
@@ -8,17 +10,31 @@ import '../widgets/badge.dart';
 import './cart_screen.dart';
 import '../widgets/app_drawer.dart';
 
-class BookOverviewScreen extends StatelessWidget {
+class BookOverviewScreen extends StatefulWidget {
   static const routeName = '/books';
+
+  @override
+  _BookOverviewScreenState createState() => _BookOverviewScreenState();
+}
+
+class _BookOverviewScreenState extends State<BookOverviewScreen> {
+  var _books;
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
+
   _getBooks(BuildContext context) async {
-    try {
-      final response =
-          await Provider.of<BookProvider>(context, listen: false).getBooks();
-      return response;
-    } catch (error) {
-      print(error);
-      return [];
-    }
+    return this._memoizer.runOnce(() async {
+      try {
+        final response =
+            await Provider.of<BookProvider>(context, listen: false).getBooks();
+        setState(() {
+          _books = response;
+        });
+        return response;
+      } catch (error) {
+        print(error);
+        return [];
+      }
+    });
   }
 
   @override
@@ -28,6 +44,14 @@ class BookOverviewScreen extends StatelessWidget {
         title: Text('Books'),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.search), onPressed: () {}),
+          IconButton(
+              icon: Icon(Icons.filter_list),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FilterBooks(_books)));
+              }),
           Consumer<CartProvider>(
             builder: (_, cartData, ch) => Padding(
               padding: EdgeInsets.only(right: 10),
@@ -50,7 +74,7 @@ class BookOverviewScreen extends StatelessWidget {
         future: _getBooks(context),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            List books = snapshot.data;
+            List books = _books;
             if (books.length == 0)
               return Center(
                 child: Text('No book found!'),
