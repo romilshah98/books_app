@@ -1,6 +1,10 @@
 import 'package:books_app/providers/book_provider.dart';
+import 'package:books_app/providers/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/badge.dart';
+import './cart_screen.dart';
 
 class BookDescriptionScreen extends StatefulWidget {
   final book;
@@ -29,6 +33,20 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.book['title']),
+        actions: <Widget>[
+          Consumer<CartProvider>(
+            builder: (_, cartData, ch) => Badge(
+              child: ch,
+              value: cartData.itemCount.toString(),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
+            ),
+          ),
+        ],
       ),
       body: FutureBuilder(
         future: _getBookDetails(context),
@@ -106,19 +124,6 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                GestureDetector(
-                                  child: CircleAvatar(
-                                    maxRadius: 12,
-                                    child: Text('-'),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      if (quantity > 0) {
-                                        quantity = quantity - 1;
-                                      }
-                                    });
-                                  },
-                                ),
                                 Card(
                                   child: Padding(
                                       padding: EdgeInsets.all(10),
@@ -132,15 +137,21 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
                                   onTap: () {
                                     setState(() {
                                       quantity = quantity + 1;
+                                      Provider.of<CartProvider>(context,
+                                              listen: false)
+                                          .addItem(
+                                              widget.book['id'],
+                                              widget.book['price'],
+                                              widget.book['title']);
                                     });
                                   },
                                   child: CircleAvatar(
-                                    maxRadius: 12,
+                                    maxRadius: 16,
                                     child: Text('+'),
                                   ),
                                 ),
                                 CircleAvatar(
-                                  maxRadius: 12,
+                                  maxRadius: 16,
                                   child: Text(this.quantity.toString()),
                                 )
                               ],
