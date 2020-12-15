@@ -29,9 +29,12 @@ class BookOverviewScreen extends StatelessWidget {
         actions: <Widget>[
           IconButton(icon: Icon(Icons.search), onPressed: () {}),
           Consumer<CartProvider>(
-            builder: (_, cartData, ch) => Badge(
-              child: ch,
-              value: cartData.itemCount.toString(),
+            builder: (_, cartData, ch) => Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Badge(
+                child: ch,
+                value: cartData.itemCount.toString(),
+              ),
             ),
             child: IconButton(
               icon: Icon(Icons.shopping_cart),

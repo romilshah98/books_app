@@ -35,12 +35,17 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
         title: Text(widget.book['title']),
         actions: <Widget>[
           Consumer<CartProvider>(
-            builder: (_, cartData, ch) => Badge(
-              child: ch,
-              value: cartData.itemCount.toString(),
+            builder: (_, cartData, ch) => Padding(
+              padding: EdgeInsets.only(right: 10.0),
+              child: Badge(
+                child: ch,
+                value: cartData.itemCount.toString(),
+              ),
             ),
             child: IconButton(
-              icon: Icon(Icons.shopping_cart),
+              icon: Padding(
+                  padding: EdgeInsets.only(right: 12.0),
+                  child: Icon(Icons.shopping_cart)),
               onPressed: () {
                 Navigator.of(context).pushNamed(CartScreen.routeName);
               },
