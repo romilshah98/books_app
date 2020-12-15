@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/cart_provider.dart';
+import './badge.dart';
 
 class Book extends StatelessWidget {
   final Map book;
@@ -12,6 +13,8 @@ class Book extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context, listen: false);
+    final bookCartCount =
+        Provider.of<CartProvider>(context).getItemCount(book['id']);
     return GestureDetector(
       child: GridTile(
         child: Image.network(
@@ -24,14 +27,17 @@ class Book extends StatelessWidget {
             book['title'],
             textAlign: TextAlign.center,
           ),
-          trailing: IconButton(
-            icon: Icon(
-              Icons.shopping_cart,
+          trailing: Badge(
+            child: IconButton(
+              icon: Icon(
+                Icons.shopping_cart,
+              ),
+              onPressed: () {
+                cart.addItem(
+                    this.book['id'], this.book['price'], this.book['title']);
+              },
             ),
-            onPressed: () {
-              cart.addItem(
-                  this.book['id'], this.book['price'], this.book['title']);
-            },
+            value: bookCartCount.toString(),
           ),
         ),
       ),
