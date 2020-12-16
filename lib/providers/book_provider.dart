@@ -5,7 +5,13 @@ import 'package:flutter/material.dart';
 class BookProvider extends ChangeNotifier {
   final String authToken;
   BookProvider(this.authToken);
-  Future getBooks() async {
+  List<dynamic> _books = [];
+
+  List get books {
+    return [..._books];
+  }
+
+  Future<void> getBooks() async {
     try {
       final response = await http.get(
           "https://book-shop-8a737.firebaseio.com/books.json?auth=$authToken");
@@ -22,7 +28,8 @@ class BookProvider extends ChangeNotifier {
           'url': bookData['url']
         });
       });
-      return book;
+      _books = book;
+      notifyListeners();
     } catch (error) {
       throw (error);
     }

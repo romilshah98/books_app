@@ -10,35 +10,26 @@ import '../widgets/badge.dart';
 import './cart_screen.dart';
 import '../widgets/app_drawer.dart';
 
-class BookOverviewScreen extends StatefulWidget {
+class BookOverviewScreen extends StatelessWidget {
   static const routeName = '/books';
 
-  @override
-  _BookOverviewScreenState createState() => _BookOverviewScreenState();
-}
-
-class _BookOverviewScreenState extends State<BookOverviewScreen> {
-  var _books;
-  final AsyncMemoizer _memoizer = AsyncMemoizer();
+  // final AsyncMemoizer _memoizer = AsyncMemoizer();
 
   _getBooks(BuildContext context) async {
-    return this._memoizer.runOnce(() async {
-      try {
-        final response =
-            await Provider.of<BookProvider>(context, listen: false).getBooks();
-        setState(() {
-          _books = response;
-        });
-        return response;
-      } catch (error) {
-        print(error);
-        return [];
-      }
-    });
+    // return this._memoizer.runOnce(() async {
+    try {
+      Provider.of<BookProvider>(context).getBooks();
+      return true;
+    } catch (error) {
+      print(error);
+      throw(error);
+    }
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
+    final List _books = Provider.of<BookProvider>(context).books;
     return Scaffold(
       appBar: AppBar(
         title: Text('Books'),
