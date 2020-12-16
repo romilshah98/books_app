@@ -25,7 +25,6 @@ class BookDescriptionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final quantity =
         Provider.of<CartProvider>(context).getItemCount(book['id']);
-    print(quantity);
     return Scaffold(
       appBar: AppBar(
         title: Text(book['title']),
@@ -57,18 +56,17 @@ class BookDescriptionScreen extends StatelessWidget {
               padding: EdgeInsets.only(left: 20, right: 20),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Image.network(snapshot.data['image'])],
-                  ),
-                  Divider(
-                    height: 1,
-                  ),
                   Expanded(
                       child: ListView(
                     children: [
-                      SingleChildScrollView(
-                          child: Column(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [Image.network(snapshot.data['image'])],
+                      ),
+                      Divider(
+                        height: 1,
+                      ),
+                      Column(
                         children: [
                           DataTable(
                             headingRowHeight: 0,
@@ -173,7 +171,7 @@ class BookDescriptionScreen extends StatelessWidget {
                             ),
                           )
                         ],
-                      ))
+                      ),
                     ],
                   ))
                 ],
