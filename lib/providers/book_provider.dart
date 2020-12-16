@@ -6,9 +6,20 @@ class BookProvider extends ChangeNotifier {
   final String authToken;
   BookProvider(this.authToken);
   List<dynamic> _books = [];
+  List<dynamic> _filteredBooks = [];
 
   List get books {
-    return [..._books];
+    return [..._filteredBooks];
+  }
+
+  Future<void> search(String text) async {
+    if (text == '') _filteredBooks = _books;
+    text = text.toLowerCase();
+    List books = _books
+        .where((book) => book['title'].toLowerCase().contains(text))
+        .toList();
+    _filteredBooks = books;
+    notifyListeners();
   }
 
   Future<void> getBooks() async {
@@ -29,6 +40,7 @@ class BookProvider extends ChangeNotifier {
         });
       });
       _books = book;
+      _filteredBooks = book;
       notifyListeners();
     } catch (error) {
       throw (error);
