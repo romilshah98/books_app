@@ -18,7 +18,10 @@ class AppDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.book),
-            title: const Text('Books'),
+            title: const Text(
+              'Books',
+              style: TextStyle(fontSize: 17.0),
+            ),
             onTap: () {
               Navigator.of(context)
                   .pushReplacementNamed(BookOverviewScreen.routeName);
@@ -27,7 +30,10 @@ class AppDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.payment),
-            title: const Text('Orders'),
+            title: const Text(
+              'My Orders',
+              style: TextStyle(fontSize: 17.0),
+            ),
             onTap: () {
               Navigator.of(context)
                   .pushReplacementNamed(OrdersScreen.routeName);
@@ -36,11 +42,14 @@ class AppDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.exit_to_app),
-            title: const Text('Logout'),
+            title: const Text(
+              'Logout',
+              style: TextStyle(fontSize: 17.0),
+            ),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed('/');
-              Provider.of<AuthProvider>(context,listen:false).logout();
+              Provider.of<AuthProvider>(context, listen: false).logout();
             },
           ),
         ],
