@@ -7,11 +7,11 @@ class BookProvider extends ChangeNotifier {
   BookProvider(this.authToken);
   List<dynamic> _books = [];
   List<dynamic> _filteredBooks = [];
-  List<dynamic> selectedFiltered = [];
+  List<dynamic> categoriesToFilter = [];
+  List<dynamic> pricesToFilter = [];
   List<dynamic> bookList = [];
   List<dynamic> finalFilteredBooks = [];
   Map<String, bool> filterState = {};
-  Set alreadyFiltered = <String>{};
 
   List get books {
     return [..._filteredBooks];
@@ -95,31 +95,62 @@ class BookProvider extends ChangeNotifier {
   filterBooks() {
     bookList = [];
     finalFilteredBooks = [];
-    print(selectedFiltered);
-    for (var i = 0; i < selectedFiltered.length; i++) {
-      if (isNumeric(selectedFiltered[i].substring(1, 3))) {
-        List books = _books
-            .where((book) =>
-                double.parse(selectedFiltered[i].substring(1, 3)) <=
-                    double.parse(book['price'].substring(1)) &&
-                double.parse(book['price'].substring(1)) <=
-                    double.parse(selectedFiltered[i].substring(8)))
-            .toList();
-        bookList.add(books);
-      } else {
-        List books = _books
-            .where((book) => book['title'].contains(selectedFiltered[i]))
-            .toList();
-        bookList.add(books);
-      }
+    print(categoriesToFilter);
+    print(pricesToFilter);
+    for (var i = 0; i < categoriesToFilter.length; i++) {
+      List books = _books
+          .where((book) => book['title'].contains(categoriesToFilter[i]))
+          .toList();
+      bookList.add(books);
     }
-
     for (var i = 0; i < bookList.length; i++) {
       for (var j = 0; j < bookList[i].length; j++) {
         finalFilteredBooks.add(bookList[i][j]);
       }
     }
-    if (selectedFiltered.length > 0) {
+
+    if (finalFilteredBooks.length > 0) {
+      if (pricesToFilter.length > 0) {
+        bookList = [];
+        for (var i = 0; i < pricesToFilter.length; i++) {
+          List books = finalFilteredBooks
+              .where((book) =>
+                  double.parse(pricesToFilter[i].substring(1, 3)) <=
+                      double.parse(book['price'].substring(1)) &&
+                  double.parse(book['price'].substring(1)) <=
+                      double.parse(pricesToFilter[i].substring(8)))
+              .toList();
+          bookList.add(books);
+        }
+        finalFilteredBooks = [];
+        print(bookList.length);
+        for (var i = 0; i < bookList.length; i++) {
+          for (var j = 0; j < bookList[i].length; j++) {
+            finalFilteredBooks.add(bookList[i][j]);
+          }
+        }
+      }
+    } else {
+      if (pricesToFilter.length > 0) {
+        bookList = [];
+        for (var i = 0; i < pricesToFilter.length; i++) {
+          List books = _books
+              .where((book) =>
+                  double.parse(pricesToFilter[i].substring(1, 3)) <=
+                      double.parse(book['price'].substring(1)) &&
+                  double.parse(book['price'].substring(1)) <=
+                      double.parse(pricesToFilter[i].substring(8)))
+              .toList();
+          bookList.add(books);
+        }
+        for (var i = 0; i < bookList.length; i++) {
+          for (var j = 0; j < bookList[i].length; j++) {
+            finalFilteredBooks.add(bookList[i][j]);
+          }
+        }
+      }
+    }
+    if (categoriesToFilter.length > 0 || pricesToFilter.length > 0) {
       _filteredBooks = finalFilteredBooks;
       notifyListeners();
     } else {

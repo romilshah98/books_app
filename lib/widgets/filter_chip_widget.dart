@@ -11,6 +11,13 @@ class FilterChipWidget extends StatefulWidget {
   _FilterChipWidgetState createState() => _FilterChipWidgetState();
 }
 
+bool isNumeric(String s) {
+  if (s == null) {
+    return false;
+  }
+  return double.parse(s, (e) => null) != null;
+}
+
 class _FilterChipWidgetState extends State<FilterChipWidget> {
   @override
   Widget build(BuildContext context) {
@@ -18,8 +25,9 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
     if (_isSelected[widget.chipName] == null) {
       _isSelected[widget.chipName] = false;
     }
-    var selectedFilterChip =
-        Provider.of<BookProvider>(context).selectedFiltered;
+    var filterByCategory =
+        Provider.of<BookProvider>(context).categoriesToFilter;
+    var filterByPrice = Provider.of<BookProvider>(context).pricesToFilter;
     return FilterChip(
       label: Text(widget.chipName),
       labelStyle: TextStyle(
@@ -32,15 +40,21 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
       ),
       backgroundColor: Color(0xffededed),
       onSelected: (isSelected) {
-        if (selectedFilterChip.contains(widget.chipName)) {
-          selectedFilterChip.remove(widget.chipName);
+        if (isNumeric(widget.chipName.substring(1, 3))) {
+          if (filterByPrice.contains(widget.chipName)) {
+            filterByPrice.remove(widget.chipName);
+          } else {
+            filterByPrice.add(widget.chipName);
+          }
         } else {
-          selectedFilterChip.add(widget.chipName);
+          if (filterByCategory.contains(widget.chipName)) {
+            filterByCategory.remove(widget.chipName);
+          } else {
+            filterByCategory.add(widget.chipName);
+          }
         }
         setState(() {
           _isSelected[widget.chipName] = isSelected;
-          // print(_isSelected);
-          // print(selectedFilterChip);
         });
       },
       selectedColor: Color(0xffeadffd),
