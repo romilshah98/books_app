@@ -1,4 +1,6 @@
+import 'package:books_app/providers/book_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FilterChipWidget extends StatefulWidget {
   final String chipName;
@@ -10,30 +12,35 @@ class FilterChipWidget extends StatefulWidget {
 }
 
 class _FilterChipWidgetState extends State<FilterChipWidget> {
-  var _isSelected = false;
-  Map final_filtered_categories = {};
-  Map final_filtered_price_range = {};
   @override
   Widget build(BuildContext context) {
-    print(final_filtered_categories);
+    var _isSelected = Provider.of<BookProvider>(context).filterState;
+    if (_isSelected[widget.chipName] == null) {
+      _isSelected[widget.chipName] = false;
+    }
+    var selectedFilterChip =
+        Provider.of<BookProvider>(context).selectedFiltered;
     return FilterChip(
       label: Text(widget.chipName),
       labelStyle: TextStyle(
           color: Color(0xff6200ee),
           fontSize: 16.0,
           fontWeight: FontWeight.bold),
-      selected: _isSelected,
+      selected: _isSelected[widget.chipName],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
       ),
       backgroundColor: Color(0xffededed),
       onSelected: (isSelected) {
+        if (selectedFilterChip.contains(widget.chipName)) {
+          selectedFilterChip.remove(widget.chipName);
+        } else {
+          selectedFilterChip.add(widget.chipName);
+        }
         setState(() {
-          print(widget.chipName);
-          final_filtered_categories[widget.chipName] == null
-              ? final_filtered_categories[widget.chipName] = 1
-              : final_filtered_categories[widget.chipName] += 1;
-          _isSelected = isSelected;
+          _isSelected[widget.chipName] = isSelected;
+          // print(_isSelected);
+          // print(selectedFilterChip);
         });
       },
       selectedColor: Color(0xffeadffd),

@@ -7,6 +7,11 @@ class BookProvider extends ChangeNotifier {
   BookProvider(this.authToken);
   List<dynamic> _books = [];
   List<dynamic> _filteredBooks = [];
+  List<dynamic> selectedFiltered = [];
+  List<dynamic> bookList = [];
+  List<dynamic> finalFilteredBooks = [];
+  Map<String, bool> filterState = {};
+  Set alreadyFiltered = <String>{};
 
   List get books {
     return [..._filteredBooks];
@@ -77,6 +82,42 @@ class BookProvider extends ChangeNotifier {
       return responseData;
     } catch (error) {
       print(error);
+    }
+  }
+
+  filterBooks() {
+    bookList = [];
+    finalFilteredBooks = [];
+    print(selectedFiltered);
+    for (var i = 0; i < selectedFiltered.length; i++) {
+      List books = _books
+          .where((book) => book['title'].contains(selectedFiltered[i]))
+          .toList();
+      bookList.add(books);
+      print("dksf");
+      if (bookList.length != i + 1) {
+        print("dksf");
+        print(double.parse(_books[0]['price'].substring(1)) <
+            double.parse(selectedFiltered[i].substring(8)));
+        List books = _books
+            .where((book) =>
+                double.parse(book['price'].substring(1)) <
+                double.parse(selectedFiltered[i].substring(8)))
+            .toList();
+        bookList.add(books);
+      }
+    }
+    for (var i = 0; i < bookList.length; i++) {
+      for (var j = 0; j < bookList[i].length; j++) {
+        finalFilteredBooks.add(bookList[i][j]);
+      }
+    }
+    if (selectedFiltered.length > 0) {
+      _filteredBooks = finalFilteredBooks;
+      notifyListeners();
+    } else {
+      _filteredBooks = _books;
+      notifyListeners();
     }
   }
 }

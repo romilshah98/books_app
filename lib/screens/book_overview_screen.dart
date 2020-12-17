@@ -93,10 +93,8 @@ class _BookOverviewScreenState extends State<BookOverviewScreen> {
                 IconButton(
                   icon: Icon(Icons.filter_list),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FilterBooks(_books)));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => FilterBooks()));
                   },
                 ),
                 Consumer<CartProvider>(
