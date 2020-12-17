@@ -1,9 +1,7 @@
-import 'dart:io';
-
-import 'package:books_app/screens/book_description.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/book_description_screen.dart';
 import '../providers/cart_provider.dart';
 import './badge.dart';
 
@@ -29,7 +27,7 @@ class Book extends StatelessWidget {
           ),
           trailing: Badge(
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.shopping_cart,
               ),
               onPressed: () {

@@ -1,12 +1,13 @@
-import 'package:books_app/screens/filter_books.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/book_provider.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/book.dart';
 import '../widgets/badge.dart';
 import './cart_screen.dart';
 import '../widgets/app_drawer.dart';
+import './filter_books.dart';
 
 class BookOverviewScreen extends StatefulWidget {
   static const routeName = '/books';
@@ -31,7 +32,6 @@ class _BookOverviewScreenState extends State<BookOverviewScreen> {
         _isLoading = false;
       });
     });
-
     super.initState();
   }
 
@@ -47,10 +47,10 @@ class _BookOverviewScreenState extends State<BookOverviewScreen> {
       appBar: AppBar(
         title: _isSearching
             ? TextField(
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 cursorColor: Colors.white,
                 controller: _controller,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Search',
                   hintStyle: TextStyle(color: Colors.white),
                   border: UnderlineInputBorder(
@@ -61,14 +61,14 @@ class _BookOverviewScreenState extends State<BookOverviewScreen> {
                   Provider.of<BookProvider>(context, listen: false).search(text)
                 },
               )
-            : Text('Books'),
+            : const Text('Books'),
         actions: _isSearching
             ? <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     IconButton(
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                       color: Colors.white,
                       onPressed: () async {
                         await Provider.of<BookProvider>(context, listen: false)
@@ -84,14 +84,14 @@ class _BookOverviewScreenState extends State<BookOverviewScreen> {
               ]
             : <Widget>[
                 IconButton(
-                    icon: Icon(Icons.search),
+                    icon: const Icon(Icons.search),
                     onPressed: () {
                       setState(() {
                         _isSearching = true;
                       });
                     }),
                 IconButton(
-                  icon: Icon(Icons.filter_list),
+                  icon: const Icon(Icons.filter_list),
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => FilterBooks()));
@@ -99,14 +99,14 @@ class _BookOverviewScreenState extends State<BookOverviewScreen> {
                 ),
                 Consumer<CartProvider>(
                   builder: (_, cartData, ch) => Padding(
-                    padding: EdgeInsets.only(right: 10),
+                    padding: const EdgeInsets.only(right: 10),
                     child: Badge(
                       child: ch,
                       value: cartData.itemCount.toString(),
                     ),
                   ),
                   child: IconButton(
-                    icon: Icon(Icons.shopping_cart),
+                    icon: const Icon(Icons.shopping_cart),
                     onPressed: () {
                       Navigator.of(context).pushNamed(CartScreen.routeName);
                     },
@@ -116,14 +116,14 @@ class _BookOverviewScreenState extends State<BookOverviewScreen> {
       ),
       drawer: AppDrawer(),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : _books.length == 0
-              ? Center(child: Text('No Books Found!'))
+              ? const Center(child: Text('No Books Found!'))
               : GridView.builder(
                   padding: const EdgeInsets.all(10),
                   itemCount: _books.length,
                   itemBuilder: (ctx, index) => Book(_books[index]),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     childAspectRatio: 3 / 4,
                     crossAxisSpacing: 10,

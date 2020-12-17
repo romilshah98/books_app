@@ -7,9 +7,7 @@ import '../providers/orders_provider.dart' as ordItem;
 
 class OrderItem extends StatefulWidget {
   final ordItem.OrderItem order;
-  OrderItem(this.order) {
-    print(this.order.amount);
-  }
+  OrderItem(this.order);
 
   @override
   _OrderItemState createState() => _OrderItemState();
@@ -20,7 +18,7 @@ class _OrderItemState extends State<OrderItem> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Column(
         children: <Widget>[
           ListTile(
@@ -39,36 +37,37 @@ class _OrderItemState extends State<OrderItem> {
           ),
           if (_expanded)
             Container(
-                padding: EdgeInsets.symmetric(horizontal: 18, vertical: 5),
-                height: min(widget.order.books.length * 25.0 + 10, 150),
-                child: ListView(
-                  children: widget.order.books
-                      .map(
-                        (book) => Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Expanded(
-                              child: Text(
-                                book.title,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              '${book.quantity}x \$${book.price}',
-                              style: TextStyle(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
+              height: min(widget.order.books.length * 25.0 + 10, 150),
+              child: ListView(
+                children: widget.order.books
+                    .map(
+                      (book) => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              book.title,
+                              style: const TextStyle(
                                 fontSize: 18,
-                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ],
-                        ),
-                      )
-                      .toList(),
-                ))
+                          ),
+                          Text(
+                            '${book.quantity}x \$${book.price}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
         ],
       ),
     );

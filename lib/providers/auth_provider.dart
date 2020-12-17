@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:flutter/material.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -11,8 +10,6 @@ class AuthProvider extends ChangeNotifier {
   DateTime _expiryDate;
   Timer _authTime;
   String _userId;
-  String _email;
-  String _password;
 
   bool get isAuth {
     return token != null;
@@ -30,14 +27,6 @@ class AuthProvider extends ChangeNotifier {
     }
     return null;
   }
-
-  // String get email {
-  //   return _email;
-  // }
-
-  // String get password {
-  //   return _password;
-  // }
 
   Future registerUser(String email, String password) async {
     try {
@@ -85,11 +74,6 @@ class AuthProvider extends ChangeNotifier {
             'returnSecureToken': true,
           }));
       final jsonResponse = convert.jsonDecode(response.body);
-      // if (jsonResponse['result']) {
-      //   _email = email;
-      //   _password = password;
-      //   // notifyListeners();
-      // }
       if (jsonResponse['error'] == null) {
         _token = jsonResponse['idToken'];
         _userId = jsonResponse['localId'];

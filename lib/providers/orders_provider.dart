@@ -10,6 +10,7 @@ class OrderItem {
   final double amount;
   final List<CartItem> books;
   final DateTime dateTime;
+
   OrderItem(
       {@required this.id,
       @required this.amount,
@@ -20,7 +21,9 @@ class OrderItem {
 class OrdersProvider with ChangeNotifier {
   final String authToken;
   final String userId;
+
   OrdersProvider(this.authToken, this.userId);
+
   List<OrderItem> _orders = [];
 
   List<OrderItem> get orders {
