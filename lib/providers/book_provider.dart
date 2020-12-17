@@ -1,17 +1,18 @@
 import 'dart:convert' as convert;
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class BookProvider extends ChangeNotifier {
   final String authToken;
   BookProvider(this.authToken);
+
   List<dynamic> _books = [];
   List<dynamic> _filteredBooks = [];
-
   List<dynamic> categoriesToFilter = [];
   List<dynamic> pricesToFilter = [];
-  List<dynamic> bookList = [];
-  List<dynamic> finalFilteredBooks = [];
+  List<dynamic> _bookList = [];
+  List<dynamic> _finalFilteredBooks = [];
   Map<String, bool> filterState = {};
 
   List get books {
@@ -51,29 +52,7 @@ class BookProvider extends ChangeNotifier {
     } catch (error) {
       throw (error);
     }
-    // try {
-    //   final response =
-    //       await http.get('https://api.itbook.store/1.0/search/');
-    //   final jsonResponse = convert.jsonDecode(response.body);
-    //   // addBookToFirebase();
-    //   // print(jsonResponse['books']);
-    //   for (var book in jsonResponse['books']) {
-    //     addBookToFirebase(book);
-    //   }
-    //   return jsonResponse;
-    // } catch (error) {
-    //   print(error);
-    //   throw (error);
-    // }
   }
-
-  // Future addBookToFirebase(Object book) async {
-  //   final url =
-  //       "https://book-shop-8a737.firebaseio.com/books.json?auth=$authToken";
-  //   final response = await http.post(url, body: convert.jsonEncode(book));
-  //   final jsonResponse = convert.jsonDecode(response.body);
-  //   print(jsonResponse);
-  // }
 
   Future<dynamic> getBookDetails(var isbn) async {
     final url = "https://api.itbook.store/1.0/books/$isbn";
@@ -86,78 +65,65 @@ class BookProvider extends ChangeNotifier {
     }
   }
 
-  bool isNumeric(String s) {
-    if (s == null) {
+  bool isNumeric(String str) {
+    if (str == null) {
       return false;
     }
-    return double.parse(s, (e) => null) != null;
+    return double.parse(str, (e) => null) != null;
   }
 
   filterBooks() {
-    bookList = [];
-    finalFilteredBooks = [];
+    _bookList = [];
+    _finalFilteredBooks = [];
 
     // applying category filter
-    for (var i = 0; i < categoriesToFilter.length; i++) {
+    for (var index = 0; index < categoriesToFilter.length; index++) {
       List books = _books
-          .where((book) => book['title'].contains(categoriesToFilter[i]))
+          .where((book) => book['title'].contains(categoriesToFilter[index]))
           .toList();
-      bookList.add(books);
+      _bookList.addAll(books);
     }
-    for (var i = 0; i < bookList.length; i++) {
-      for (var j = 0; j < bookList[i].length; j++) {
-        finalFilteredBooks.add(bookList[i][j]);
+    _finalFilteredBooks.addAll(_bookList);
+
+    // applying price filter on selected categories
+    if (_finalFilteredBooks.length > 0) {
+      if (pricesToFilter.length > 0) {
+        _bookList = [];
+        for (var index = 0; index < pricesToFilter.length; index++) {
+          List books = _finalFilteredBooks
+              .where((book) =>
+                  double.parse(pricesToFilter[index].substring(1, 3)) <=
+                      double.parse(book['price'].substring(1)) &&
+                  double.parse(book['price'].substring(1)) <=
+                      double.parse(pricesToFilter[index].substring(8)))
+              .toList();
+          _bookList.addAll(books);
+        }
+        _finalFilteredBooks = [..._bookList];
       }
     }
 
-    // applying price filter on selected categories
-    if (finalFilteredBooks.length > 0) {
-      if (pricesToFilter.length > 0) {
-        bookList = [];
-        for (var i = 0; i < pricesToFilter.length; i++) {
-          List books = finalFilteredBooks
-              .where((book) =>
-                  double.parse(pricesToFilter[i].substring(1, 3)) <=
-                      double.parse(book['price'].substring(1)) &&
-                  double.parse(book['price'].substring(1)) <=
-                      double.parse(pricesToFilter[i].substring(8)))
-              .toList();
-          bookList.add(books);
-        }
-        finalFilteredBooks = [];
-        print(bookList.length);
-        for (var i = 0; i < bookList.length; i++) {
-          for (var j = 0; j < bookList[i].length; j++) {
-            finalFilteredBooks.add(bookList[i][j]);
-          }
-        }
-      }
-    }
     // applying price filter directly on all books as no category filter selected
     else {
       if (pricesToFilter.length > 0) {
-        bookList = [];
-        for (var i = 0; i < pricesToFilter.length; i++) {
+        _bookList = [];
+        for (var index = 0; index < pricesToFilter.length; index++) {
           List books = _books
               .where((book) =>
-                  double.parse(pricesToFilter[i].substring(1, 3)) <=
+                  double.parse(pricesToFilter[index].substring(1, 3)) <=
                       double.parse(book['price'].substring(1)) &&
                   double.parse(book['price'].substring(1)) <=
-                      double.parse(pricesToFilter[i].substring(8)))
+                      double.parse(pricesToFilter[index].substring(8)))
               .toList();
-          bookList.add(books);
+          _bookList.addAll(books);
         }
-        for (var i = 0; i < bookList.length; i++) {
-          for (var j = 0; j < bookList[i].length; j++) {
-            finalFilteredBooks.add(bookList[i][j]);
-          }
-        }
+        _finalFilteredBooks.addAll(_bookList);
       }
     }
 
     // returning filtered books
     if (categoriesToFilter.length > 0 || pricesToFilter.length > 0) {
-      _filteredBooks = finalFilteredBooks;
+      _filteredBooks = _finalFilteredBooks;
       notifyListeners();
     } else {
       _filteredBooks = _books;

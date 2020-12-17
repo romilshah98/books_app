@@ -1,6 +1,7 @@
-import 'package:books_app/providers/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/book_provider.dart';
 
 class FilterChipWidget extends StatefulWidget {
   final String chipName;
@@ -11,14 +12,15 @@ class FilterChipWidget extends StatefulWidget {
   _FilterChipWidgetState createState() => _FilterChipWidgetState();
 }
 
-bool isNumeric(String s) {
-  if (s == null) {
+bool isNumeric(String str) {
+  if (str == null) {
     return false;
   }
-  return double.parse(s, (e) => null) != null;
+  return double.parse(str, (e) => null) != null;
 }
 
 class _FilterChipWidgetState extends State<FilterChipWidget> {
+  
   @override
   Widget build(BuildContext context) {
     var _isSelected = Provider.of<BookProvider>(context).filterState;

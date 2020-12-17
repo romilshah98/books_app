@@ -7,7 +7,7 @@ import '../widgets/book.dart';
 import '../widgets/badge.dart';
 import './cart_screen.dart';
 import '../widgets/app_drawer.dart';
-import './filter_books.dart';
+import './filter_books_screen.dart';
 
 class BookOverviewScreen extends StatefulWidget {
   static const routeName = '/books';

@@ -1,6 +1,7 @@
-import 'package:books_app/providers/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/book_provider.dart';
 import '../widgets/filter_chip_widget.dart';
 
 class FilterBooks extends StatefulWidget {
@@ -18,10 +19,10 @@ class _FilterBooksState extends State<FilterBooks> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Filter Books'),
+          title: const Text('Filter Books'),
         ),
         body: Container(
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
           child: Column(
             children: <Widget>[
               Align(
@@ -53,7 +54,7 @@ class _FilterBooksState extends State<FilterBooks> {
                   )),
                 ),
               ),
-              Divider(
+              const Divider(
                 color: Colors.blueGrey,
                 height: 10.0,
               ),
@@ -84,11 +85,11 @@ class _FilterBooksState extends State<FilterBooks> {
                   ),
                 ),
               ),
-              Divider(
+              const Divider(
                 color: Colors.blueGrey,
                 height: 10.0,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
               Row(
@@ -122,7 +123,7 @@ class _FilterBooksState extends State<FilterBooks> {
 Widget _titleContainer(String myTitle) {
   return Text(
     myTitle,
-    style: TextStyle(
+    style: const TextStyle(
         color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
   );
 }
