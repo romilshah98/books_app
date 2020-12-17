@@ -25,9 +25,9 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
     if (_isSelected[widget.chipName] == null) {
       _isSelected[widget.chipName] = false;
     }
-    var filterByCategory =
+    var categoriesToFilter =
         Provider.of<BookProvider>(context).categoriesToFilter;
-    var filterByPrice = Provider.of<BookProvider>(context).pricesToFilter;
+    var pricesToFilter = Provider.of<BookProvider>(context).pricesToFilter;
     return FilterChip(
       label: Text(widget.chipName),
       labelStyle: TextStyle(
@@ -41,16 +41,16 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
       backgroundColor: Color(0xffededed),
       onSelected: (isSelected) {
         if (isNumeric(widget.chipName.substring(1, 3))) {
-          if (filterByPrice.contains(widget.chipName)) {
-            filterByPrice.remove(widget.chipName);
+          if (pricesToFilter.contains(widget.chipName)) {
+            pricesToFilter.remove(widget.chipName);
           } else {
-            filterByPrice.add(widget.chipName);
+            pricesToFilter.add(widget.chipName);
           }
         } else {
-          if (filterByCategory.contains(widget.chipName)) {
-            filterByCategory.remove(widget.chipName);
+          if (categoriesToFilter.contains(widget.chipName)) {
+            categoriesToFilter.remove(widget.chipName);
           } else {
-            filterByCategory.add(widget.chipName);
+            categoriesToFilter.add(widget.chipName);
           }
         }
         setState(() {

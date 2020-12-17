@@ -7,6 +7,7 @@ class BookProvider extends ChangeNotifier {
   BookProvider(this.authToken);
   List<dynamic> _books = [];
   List<dynamic> _filteredBooks = [];
+
   List<dynamic> categoriesToFilter = [];
   List<dynamic> pricesToFilter = [];
   List<dynamic> bookList = [];
@@ -95,8 +96,8 @@ class BookProvider extends ChangeNotifier {
   filterBooks() {
     bookList = [];
     finalFilteredBooks = [];
-    print(categoriesToFilter);
-    print(pricesToFilter);
+
+    // applying category filter
     for (var i = 0; i < categoriesToFilter.length; i++) {
       List books = _books
           .where((book) => book['title'].contains(categoriesToFilter[i]))
@@ -109,6 +110,7 @@ class BookProvider extends ChangeNotifier {
       }
     }
 
+    // applying price filter on selected categories
     if (finalFilteredBooks.length > 0) {
       if (pricesToFilter.length > 0) {
         bookList = [];
@@ -130,7 +132,9 @@ class BookProvider extends ChangeNotifier {
           }
         }
       }
-    } else {
+    }
+    // applying price filter directly on all books as no category filter selected
+    else {
       if (pricesToFilter.length > 0) {
         bookList = [];
         for (var i = 0; i < pricesToFilter.length; i++) {
@@ -150,6 +154,8 @@ class BookProvider extends ChangeNotifier {
         }
       }
     }
+
+    // returning filtered books
     if (categoriesToFilter.length > 0 || pricesToFilter.length > 0) {
       _filteredBooks = finalFilteredBooks;
       notifyListeners();

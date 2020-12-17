@@ -1,5 +1,4 @@
 import 'package:books_app/providers/book_provider.dart';
-import 'package:books_app/screens/book_overview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/filter_chip_widget.dart';
