@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers/auth_provider.dart';
 
@@ -27,12 +26,7 @@ class _AuthCardState extends State<AuthCard> {
     _passwordController.dispose();
   }
 
-  Map<String, String> _loginData = {
-    'email': '',
-    'password': '',
-  };
-
-  Map<String, String> _signupData = {
+  Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
@@ -71,8 +65,8 @@ class _AuthCardState extends State<AuthCard> {
     try {
       final response =
           await Provider.of<AuthProvider>(context, listen: false).registerUser(
-        _signupData['email'],
-        _signupData['password'],
+        _authData['email'],
+        _authData['password'],
       );
       if (response['error'] == null) {
         return;
@@ -115,8 +109,8 @@ class _AuthCardState extends State<AuthCard> {
     try {
       final response = await Provider.of<AuthProvider>(context, listen: false)
           .authenticateUser(
-        _loginData['email'],
-        _loginData['password'],
+        _authData['email'],
+        _authData['password'],
       );
       if (response['error'] == null) {
         return;
@@ -196,9 +190,7 @@ class _AuthCardState extends State<AuthCard> {
                     return null;
                   },
                   onSaved: (value) {
-                    _mode == Mode.Login
-                        ? _loginData['email'] = value
-                        : _signupData['email'] = value;
+                    _authData['email'] = value;
                   },
                 ),
                 TextFormField(
@@ -221,9 +213,7 @@ class _AuthCardState extends State<AuthCard> {
                     return null;
                   },
                   onSaved: (value) {
-                    _mode == Mode.Login
-                        ? _loginData['password'] = value
-                        : _signupData['password'] = value;
+                    _authData['password'] = value;
                   },
                 ),
                 if (_mode == Mode.Signup)

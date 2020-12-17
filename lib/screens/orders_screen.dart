@@ -14,6 +14,7 @@ class OrdersScreen extends StatefulWidget {
 
 class _OrdersScreenState extends State<OrdersScreen> {
   var _isLoading = false;
+
   @override
   void initState() {
     Future.delayed(Duration.zero).then((_) async {
@@ -34,11 +35,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final orderData = Provider.of<OrdersProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Orders'),
+        title: const Text('My Orders'),
       ),
       drawer: AppDrawer(),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemBuilder: (ctx, index) => OrderItem(orderData.orders[index]),
               itemCount: orderData.orders.length,

@@ -7,31 +7,32 @@ import '../providers/orders_provider.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = '/cart';
+
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Cart'),
+        title: const Text('My Cart'),
       ),
       body: Column(
         children: <Widget>[
           Card(
-            margin: EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
             child: Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
+                  const Text(
                     'Total',
                     style: TextStyle(fontSize: 20),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Chip(
                     label: Text(
                       '\$${cart.totalAmount.toStringAsFixed(2)}',
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
@@ -40,17 +41,18 @@ class CartScreen extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Expanded(
-              child: ListView.builder(
-            itemBuilder: (ctx, index) => CartItem(
-              id: cart.items.values.toList()[index].id,
-              title: cart.items.values.toList()[index].title,
-              price: cart.items.values.toList()[index].price,
-              quantity: cart.items.values.toList()[index].quantity,
+            child: ListView.builder(
+              itemBuilder: (ctx, index) => CartItem(
+                id: cart.items.values.toList()[index].id,
+                title: cart.items.values.toList()[index].title,
+                price: cart.items.values.toList()[index].price,
+                quantity: cart.items.values.toList()[index].quantity,
+              ),
+              itemCount: cart.itemCount,
             ),
-            itemCount: cart.itemCount,
-          )),
+          ),
         ],
       ),
     );
@@ -74,10 +76,12 @@ class _OrderButtonState extends State<OrderButton> {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      child: _isLoading ? CircularProgressIndicator(): Text(
-        'ORDER NOW',
-        style: TextStyle(color: Theme.of(context).primaryColor),
-      ),
+      child: _isLoading
+          ? const CircularProgressIndicator()
+          : Text(
+              'ORDER NOW',
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
       onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
           ? null
           : () async {
@@ -89,7 +93,6 @@ class _OrderButtonState extends State<OrderButton> {
                 widget.cart.totalAmount,
               );
               widget.cart.clear();
-
               setState(() {
                 _isLoading = false;
               });
