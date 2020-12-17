@@ -85,28 +85,35 @@ class BookProvider extends ChangeNotifier {
     }
   }
 
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.parse(s, (e) => null) != null;
+  }
+
   filterBooks() {
     bookList = [];
     finalFilteredBooks = [];
     print(selectedFiltered);
     for (var i = 0; i < selectedFiltered.length; i++) {
-      List books = _books
-          .where((book) => book['title'].contains(selectedFiltered[i]))
-          .toList();
-      bookList.add(books);
-      print("dksf");
-      if (bookList.length != i + 1) {
-        print("dksf");
-        print(double.parse(_books[0]['price'].substring(1)) <
-            double.parse(selectedFiltered[i].substring(8)));
+      if (isNumeric(selectedFiltered[i].substring(1, 3))) {
         List books = _books
             .where((book) =>
-                double.parse(book['price'].substring(1)) <
-                double.parse(selectedFiltered[i].substring(8)))
+                double.parse(selectedFiltered[i].substring(1, 3)) <=
+                    double.parse(book['price'].substring(1)) &&
+                double.parse(book['price'].substring(1)) <=
+                    double.parse(selectedFiltered[i].substring(8)))
+            .toList();
+        bookList.add(books);
+      } else {
+        List books = _books
+            .where((book) => book['title'].contains(selectedFiltered[i]))
             .toList();
         bookList.add(books);
       }
     }
+
     for (var i = 0; i < bookList.length; i++) {
       for (var j = 0; j < bookList[i].length; j++) {
         finalFilteredBooks.add(bookList[i][j]);
