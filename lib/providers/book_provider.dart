@@ -12,7 +12,7 @@ class BookProvider extends ChangeNotifier {
   List<dynamic> categoriesToFilter = [];
   List<dynamic> pricesToFilter = [];
   List<dynamic> _bookList = [];
-  List<dynamic> _finalFilteredBooks = [];
+  List<dynamic> _filteredBooksByCategoryAndPrice = [];
   Map<String, bool> filterState = {};
 
   List get books {
@@ -20,9 +20,15 @@ class BookProvider extends ChangeNotifier {
   }
 
   Future<void> search(String text) async {
-    if (text == '') _filteredBooks = _books;
+    List _booksToFilter;
+    if (_filteredBooksByCategoryAndPrice.length > 0) {
+      _booksToFilter = _filteredBooksByCategoryAndPrice;
+    } else {
+      _booksToFilter = _books;
+    }
+    if (text == '') _filteredBooks = _booksToFilter;
     text = text.toLowerCase();
-    List books = _books
+    List books = _booksToFilter
         .where((book) => book['title'].toLowerCase().contains(text))
         .toList();
     _filteredBooks = books;
@@ -74,7 +80,7 @@ class BookProvider extends ChangeNotifier {
 
   filterBooks() {
     _bookList = [];
-    _finalFilteredBooks = [];
+    _filteredBooksByCategoryAndPrice = [];
 
     // applying category filter
     for (var index = 0; index < categoriesToFilter.length; index++) {
@@ -83,14 +89,14 @@ class BookProvider extends ChangeNotifier {
           .toList();
       _bookList.addAll(books);
     }
-    _finalFilteredBooks.addAll(_bookList);
+    _filteredBooksByCategoryAndPrice.addAll(_bookList);
 
     // applying price filter on selected categories
-    if (_finalFilteredBooks.length > 0) {
+    if (_filteredBooksByCategoryAndPrice.length > 0) {
       if (pricesToFilter.length > 0) {
         _bookList = [];
         for (var index = 0; index < pricesToFilter.length; index++) {
-          List books = _finalFilteredBooks
+          List books = _filteredBooksByCategoryAndPrice
               .where((book) =>
                   double.parse(pricesToFilter[index].substring(1, 3)) <=
                       double.parse(book['price'].substring(1)) &&
@@ -99,7 +105,7 @@ class BookProvider extends ChangeNotifier {
               .toList();
           _bookList.addAll(books);
         }
-        _finalFilteredBooks = [..._bookList];
+        _filteredBooksByCategoryAndPrice = [..._bookList];
       }
     }
 
@@ -117,13 +123,13 @@ class BookProvider extends ChangeNotifier {
               .toList();
           _bookList.addAll(books);
         }
-        _finalFilteredBooks.addAll(_bookList);
+        _filteredBooksByCategoryAndPrice.addAll(_bookList);
       }
     }
 
     // returning filtered books
     if (categoriesToFilter.length > 0 || pricesToFilter.length > 0) {
-      _filteredBooks = _finalFilteredBooks;
+      _filteredBooks = _filteredBooksByCategoryAndPrice;
       notifyListeners();
     } else {
       _filteredBooks = _books;
