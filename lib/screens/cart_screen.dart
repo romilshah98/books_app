@@ -41,6 +41,17 @@ class CartScreen extends StatelessWidget {
               ),
             ),
           ),
+          cart.totalAmount > 0
+              ? Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    "Swipe left to remove items",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 17.0,
+                        color: Colors.red),
+                  ))
+              : Container(),
           const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
