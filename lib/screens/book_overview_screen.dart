@@ -136,7 +136,11 @@ class _BookOverviewScreenState extends State<BookOverviewScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _books.length == 0
-              ? const Center(child: Text('No Books Found!'))
+              ? const Center(
+                  child: Text(
+                  'No Books Found!',
+                  style: TextStyle(fontSize: 18.0),
+                ))
               : GridView.builder(
                   padding: const EdgeInsets.all(10),
                   itemCount: _books.length,
