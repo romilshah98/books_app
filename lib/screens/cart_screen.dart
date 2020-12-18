@@ -88,11 +88,29 @@ class _OrderButtonState extends State<OrderButton> {
               setState(() {
                 _isLoading = true;
               });
-              await Provider.of<OrdersProvider>(context).addOrder(
-                widget.cart.items.values.toList(),
-                widget.cart.totalAmount,
-              );
-              widget.cart.clear();
+              try {
+                await Provider.of<OrdersProvider>(context).addOrder(
+                  widget.cart.items.values.toList(),
+                  widget.cart.totalAmount,
+                );
+                widget.cart.clear();
+              } catch (error) {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    content: const Text(
+                        'Something went wrong. Please check you internet connection and try again later!'),
+                    actions: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.of(ctx).pop(false);
+                        },
+                        child: const Text('Ok'),
+                      ),
+                    ],
+                  ),
+                );
+              }
               setState(() {
                 _isLoading = false;
               });

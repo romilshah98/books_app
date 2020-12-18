@@ -67,7 +67,7 @@ class BookProvider extends ChangeNotifier {
       final responseData = convert.jsonDecode(response.body);
       return responseData;
     } catch (error) {
-      print(error);
+      throw(error);
     }
   }
 

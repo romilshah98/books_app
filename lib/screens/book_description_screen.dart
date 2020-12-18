@@ -16,7 +16,21 @@ class BookDescriptionScreen extends StatelessWidget {
           .getBookDetails(book['isbn']);
       return details;
     } catch (error) {
-      print(error);
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: const Text(
+              'Something went wrong. Please check you internet connection and try again later!'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(ctx).pop(false);
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        ),
+      );
     }
   }
 

@@ -21,7 +21,25 @@ class _OrdersScreenState extends State<OrdersScreen> {
       setState(() {
         _isLoading = true;
       });
-      await Provider.of<OrdersProvider>(context, listen: false).fetchOrders();
+      try {
+        await Provider.of<OrdersProvider>(context, listen: false).fetchOrders();
+      } catch (error) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            content: const Text(
+                'Something went wrong. Please check you internet connection and try again later!'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(false);
+                },
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      }
       setState(() {
         _isLoading = false;
       });

@@ -27,7 +27,25 @@ class _BookOverviewScreenState extends State<BookOverviewScreen> {
       setState(() {
         _isLoading = true;
       });
-      await Provider.of<BookProvider>(context, listen: false).getBooks();
+      try {
+        await Provider.of<BookProvider>(context, listen: false).getBooks();
+      } catch (error) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            content: const Text(
+                'Something went wrong. Please check you internet connection and try again later!'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(false);
+                },
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      }
       setState(() {
         _isLoading = false;
       });
