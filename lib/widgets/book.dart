@@ -15,9 +15,12 @@ class Book extends StatelessWidget {
         Provider.of<CartProvider>(context).getItemCount(book['id']);
     return GestureDetector(
       child: GridTile(
-        child: Image.network(
-          book['image'],
-          fit: BoxFit.cover,
+        child: Hero(
+          tag: book['id'],
+          child: Image.network(
+            book['image'],
+            fit: BoxFit.cover,
+          ),
         ),
         footer: GridTileBar(
           backgroundColor: Colors.black54,

@@ -34,7 +34,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen> {
           context: context,
           builder: (ctx) => AlertDialog(
             content: const Text(
-                'Something went wrong. Please check you internet connection and try again later!'),
+                'Something went wrong. Please check your internet connection and try again later!'),
             actions: <Widget>[
               FlatButton(
                 onPressed: () {

@@ -20,7 +20,7 @@ class BookDescriptionScreen extends StatelessWidget {
         context: context,
         builder: (ctx) => AlertDialog(
           content: const Text(
-              'Something went wrong. Please check you internet connection and try again later!'),
+              'Something went wrong. Please check your internet connection and try again later!'),
           actions: <Widget>[
             FlatButton(
               onPressed: () {
@@ -74,7 +74,11 @@ class BookDescriptionScreen extends StatelessWidget {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [Image.network(snapshot.data['image'])],
+                          children: [
+                            Hero(
+                                tag: book['id'],
+                                child: Image.network(snapshot.data['image']))
+                          ],
                         ),
                         const Divider(
                           height: 1,
